@@ -1,31 +1,112 @@
-# PROJECTNAME
+# Python-Subdomain_Enumeration Tool
 
 ## Objective
-[Brief Objective - Remove this afterwards]
 
-The Detection Lab project aimed to establish a controlled environment for simulating and detecting cyber attacks. The primary focus was to ingest and analyze logs within a Security Information and Event Management (SIEM) system, generating test telemetry to mimic real-world attack scenarios. This hands-on experience was designed to deepen understanding of network security, attack patterns, and defensive strategies.
+The Subdomain Scanner project was developed to identify live subdomains for a given domain using multithreaded HTTP requests. It automates reconnaissance tasks commonly used in penetration testing and bug bounty hunting by scanning a list of possible subdomains and reporting which are active. This tool aids in surface mapping and enhances understanding of potential attack vectors in web applications.
 
 ### Skills Learned
-[Bullet Points - Remove this afterwards]
 
-- Advanced understanding of SIEM concepts and practical application.
-- Proficiency in analyzing and interpreting network logs.
-- Ability to generate and recognize attack signatures and patterns.
-- Enhanced knowledge of network protocols and security vulnerabilities.
-- Development of critical thinking and problem-solving skills in cybersecurity.
+- Implementation of multithreading in Python for efficient network scanning.
+- Understanding of HTTP requests and error handling using the requests library.
+- Proficiency in automating cybersecurity reconnaissance techniques.
+- Familiarity with domain structures and common subdomain enumeration practices.
+- Practical exposure to ethical hacking methodologies.
 
 ### Tools Used
-[Bullet Points - Remove this afterwards]
 
-- Security Information and Event Management (SIEM) system for log ingestion and analysis.
-- Network analysis tools (such as Wireshark) for capturing and examining network traffic.
-- Telemetry generation tools to create realistic network traffic and attack scenarios.
+- Python’s requests library for sending **HTTP** requests.
+- Python threading module for **concurrent** processing.
+- Custom subdomain wordlist **(subdomains.txt)** for testing.
+- Basic file I/O for logging results to **discovered_subdomains.txt**.
 
-## Steps
-drag & drop screenshots here or use imgur and reference them using imgsrc
 
-Every screenshot should have some text explaining what the screenshot is about.
+## 🛠 Step-by-Step Code Breakdown
 
-Example below.
+### **Step 1**: Define the Target Domain
+```python
+domain = 'youtube.com'
+```
 
-*Ref 1: Network Diagram*
+Step 2: Load Subdomains from a Wordlist
+You need a file (subdomains.txt) containing potential subdomain names like www, mail, api, etc.
+```python
+with open('subdomains.txt') as file:
+subdomains = file.read().splitlines()
+```
+
+Step 3: Prepare a List to Store Discovered Subdomains
+```python
+discovered_subdomains = []
+```
+
+Step 4: Create a Lock for Thread Safety
+This prevents multiple threads from writing to the list at the same time.
+```python
+lock = threading.Lock()
+```
+
+Step 5: Define the Function to Check Each Subdomain
+```python
+def check_subdomain(subdomain):
+url = f'http://{subdomain}.{domain}'
+try:
+requests.get(url)
+except requests.ConnectionError:
+pass
+else:
+print("[+] Discovered subdomain:", url)
+with lock:
+discovered_subdomains.append(url)
+```
+
+Step 6: Create and Start Threads for Each Subdomain
+```python
+threads = []
+
+for subdomain in subdomains:
+thread = threading.Thread(target=check_subdomain, args=(subdomain,))
+thread.start()
+threads.append(thread)
+```
+
+Step 7: Wait for All Threads to Finish
+```python
+for thread in threads:
+thread.join()
+```
+
+Step 8: Save the Discovered Subdomains to a File
+```python
+with open("discovered_subdomains.txt", 'w') as f:
+for subdomain in discovered_subdomains:
+print(subdomain, file=f)
+```
+
+## 🛠 File Structure
+```
+│
+├── subdomains.txt # Your wordlist of potential subdomains
+├── discovered_subdomains.txt # Output file containing discovered subdomains
+└── scanner.py # Your Python script
+```
+
+## ⚠️ Disclaimer
+
+This tool is intended for **educational and authorized testing purposes only**.  
+Do not use it to scan domains or networks without explicit permission.  
+Unauthorized scanning of domains can be illegal and unethical.
+
+
+## 👤 Author
+
+Made with curiosity and caffeine ☕  
+**Gumbo**  
+[GitHub Profile](https://github.com/your-username)
+
+
+
+
+
+
+
+

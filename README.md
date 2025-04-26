@@ -106,7 +106,7 @@ Unauthorized scanning of domains can be illegal and unethical.
 
 Made with curiosity and caffeine ☕  
 **Gumbo**  
-[GitHub Profile](https://github.com/your-username)
+[GitHub Profile](https://github.com/ritzsec)
 
 
 

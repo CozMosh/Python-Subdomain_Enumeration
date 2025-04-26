@@ -90,6 +90,11 @@ print(subdomain, file=f)
 └── scanner.py # Your Python script
 ```
 
+## 🛠 Command to run the Script
+```
+python3 script_name.py
+```
+
 ## ⚠️ Disclaimer
 
 This tool is intended for **educational and authorized testing purposes only**.  

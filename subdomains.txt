@@ -1,0 +1,13 @@
+www
+mail
+ftp
+blog
+dev
+api
+m
+mobile
+admin
+store
+news
+dashboard
+beta
